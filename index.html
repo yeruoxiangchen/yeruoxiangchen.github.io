@@ -1,199 +1,140 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>关于健身习惯与健身App的使用访谈与问卷</title>
+  <meta charset="UTF-8">
+  <title>健身亲和图</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    svg {
+      border: 1px solid #ccc;
+    }
+    .node circle {
+      fill: #c1ff2f;
+      cursor: pointer;
+    }
+    .node text {
+      font: 12px sans-serif;
+      fill: #333;
+    }
+    .link {
+      fill: none;
+      stroke: #ffc0cd;
+      stroke-width: 2px;
+    }
+  </style>
 </head>
-<body>
-    <header>
-        <h1>团队名称：xxxx团队</h1>
-        <p>项目提案描述：本项目旨在研究大学生的健身习惯及其对健身App的使用体验，通过收集和分析数据来改善现有健身App的设计和功能，以更好地满足用户需求。</p></header>
+<body background="https://s21.ax1x.com/2024/10/24/pAwZAIA.jpg">
+  <svg width="1200" height="1000"></svg>
 
-    <section id="project-proposal">
-        <h2>项目提案</h2>
-        <p>本项目旨在通过对大学生群体的健身习惯与健身App使用情况进行调查与访谈，了解用户的需求和痛点，从而为健身App的优化提供数据支持。我们将利用定性和定量的数据收集方法，包括面谈和问卷调查，以确保研究结果的全面性和准确性。</p>
-    </section>
+  <script>
+    const width = 1200;
+    const height = 1000;
+    const svg = d3.select("svg").attr("width", width).attr("height", height);
 
-    <section id="data-collection-plan">
-        <h2>数据收集计划</h2>
-        <p>我们将采用两种数据收集方式：</p>
-        <ul>
-            <li>面谈：通过与大学生进行一对一访谈，深入了解他们的健身习惯和对健身App的使用体验。</li>
-            <li>调查：设计问卷收集更广泛的数据，包括健身频率、偏好和对健身App的使用满意度等。</li>
-        </ul>
-    </section>
+    let nodeStack = []; 
+    let g = svg.append("g").attr("transform", "translate(100, 80)"); 
 
-    <h2>访谈脚本：关于健身习惯与健身App的使用</h2>
-    <h3>访谈结构</h3>
-    <h4>1. 介绍阶段（2-3 分钟）</h4>
-    <p>您好！感谢您参加此次访谈。我们此次访谈的目的是深入了解大学生的健身习惯和他们对健身App的使用体验。通过您的分享，我们希望更好地理解用户的需求，从而改进健身App的设计和功能。</p>
-    <p>在我们开始之前，我想确认一下，您参与此次访谈是完全自愿的，您可以随时选择退出或跳过任何不愿回答的问题。此外，所有的回答和个人信息都会严格保密，仅用于研究目的，不会与第三方分享。</p>
-    <p>在正式开始之前，您对此次访谈是否有任何问题或顾虑？如果没有，我们现在就可以开始。</p>
+    d3.json("https://raw.githubusercontent.com/Jimilarity/Jimilarity/refs/heads/main/interview_data.json").then(data => {
+      nodeStack.push(data); 
+      updateTree(data);     
+    });
 
-    <h4>2. 访谈主体（20-30 分钟）</h4>
-    <h5>主题 1：健身习惯</h5>
-    <ol>
-        <li>你通常多久健身一次？是固定的时间还是随机安排？<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-        <li>你通常选择在什么时间段进行锻炼？为什么？<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-        <li>你偏好哪种类型的锻炼（如有氧、力量、瑜伽等）？是什么原因让你选择这种锻炼方式？<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-        <li>在健身过程中，你通常独自锻炼还是与朋友一起？这对你的健身体验有什么影响？<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-        <li>在锻炼期间，你会如何安排热身和拉伸时间？<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-    </ol>
+    function updateTree(data) {
+      
+      const root = d3.hierarchy(data);
+      const treeLayout = d3.tree().size([height - 160, width - 300]);
+      treeLayout(root);
 
-    <h5>主题 2：对健身App的了解与使用</h5>
-    <ol>
-        <li>你是否使用过健身App？如果是，最常用的App是什么？<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-        <li>你认为健身App的哪些功能对你最有用（如跟踪记录、个性化课程、视频教学等）？<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-        <li>你对健身App中的社交功能有何看法？你会使用这些功能与其他用户互动吗？<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-        <li>在使用健身App的过程中，你是否遇到过任何问题或不便？请具体描述。<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-        <li>如果没有健身App，你认为自己的锻炼频率和效果会受到影响吗？<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-    </ol>
+      const links = g.selectAll(".link")
+                     .data(root.links(), d => d.target.data.name);
 
-    <h5>主题 3：用户需求与期望</h5>
-    <ol>
-        <li>你希望健身App能为你提供哪些额外的功能或服务？<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-        <li>你认为健身App中的内容应如何更新，以更好地满足用户的需求？<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-        <li>你会因为什么原因而停止使用一个健身App？（如内容不合适、界面不友好、功能单一等）<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-        <li>你认为健身App的价格是否合理？你会更愿意选择免费还是付费的App？<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-        <li>如果你能为一个健身App提出一个改进建议，那会是什么？<br>
-            <textarea rows="3" cols="50"></textarea>
-        </li>
-    </ol>
+      
+      links.enter()
+           .append("path")
+           .attr("class", "link")
+           .attr("d", d3.linkHorizontal()
+                          .x(d => d.y)
+                          .y(d => d.x))
+           .merge(links)
+           .transition()
+           .duration(750) // 过渡时间
+           .attr("d", d3.linkHorizontal()
+                          .x(d => d.y)
+                          .y(d => d.x));
 
-    <h4>3. 结尾阶段（2-3 分钟）</h4>
-    <p>非常感谢您今天的时间和耐心回答！您的回答对我们的研究非常有帮助。如果在未来有任何补充问题或需要进一步沟通，我们会提前与您联系。</p>
-    <p>再次重申，您的回答将仅用于研究目的，所有信息都将被保密。如果您对本次访谈有任何进一步的问题或想法，也可以随时联系我们。</p>
-    <p>希望您今天的访谈体验愉快！祝您生活愉快，健康快乐！</p>
+      links.exit()
+           .transition()
+           .duration(750)
+           .style("opacity", 0)
+           .remove(); 
 
-    <hr>
+      const node = g.selectAll(".node")
+                    .data(root.descendants(), d => d.data.name);
 
-    <h2>问卷：大学生的健身习惯与健身App使用情况</h2>
-    <h3>问题结构与类型</h3>
+     
+      const nodeEnter = node.enter()
+                            .append("g")
+                            .attr("class", "node")
+                            .attr("transform", d => `translate(${d.y}, ${d.x})`)
+                            .on("click", (event, d) => handleClick(d))
+                            .on("mouseover", handleMouseOver)
+                            .on("mouseout", handleMouseOut);
 
-    <h4>主题 1：健身习惯</h4>
-    <form>
-        <label>你每周的平均锻炼次数是多少？</label><br>
-        <input type="radio" name="frequency" value="1次">1次<br>
-        <input type="radio" name="frequency" value="2-3次">2-3次<br>
-        <input type="radio" name="frequency" value="4-5次">4-5次<br>
-        <input type="radio" name="frequency" value="6次以上">6次以上<br><br>
+      nodeEnter.append("circle").attr("r", 5);
+      nodeEnter.append("text")
+               .attr("dy", "0.35em")
+               .attr("x", d => d.children ? -10 : 10)
+               .style("text-anchor", d => d.children ? "end" : "start")
+               .text(d => d.data.name);
 
-        <label>你通常锻炼的时间是？</label><br>
-        <input type="radio" name="time" value="早上">早上<br>
-        <input type="radio" name="time" value="中午">中午<br>
-        <input type="radio" name="time" value="下午">下午<br>
-        <input type="radio" name="time" value="晚上">晚上<br>
-        <input type="radio" name="time" value="时间不固定">时间不固定<br><br>
+      
+      const nodeUpdate = nodeEnter.merge(node)
+                                   .transition()
+                                   .duration(750) // 过渡时间
+                                   .attr("transform", d => `translate(${d.y}, ${d.x})`);
 
-        <label>你通常在什么场所锻炼？</label><br>
-        <input type="checkbox" name="place" value="健身房">健身房<br>
-        <input type="checkbox" name="place" value="户外">户外<br>
-        <input type="checkbox" name="place" value="家中">家中<br>
-        <input type="checkbox" name="place" value="学校">学校<br>
-        <input type="checkbox" name="place" value="其他">其他<br><br>
+      nodeUpdate.select("circle")
+                .attr("r", 5);
 
-        <label>你偏爱的锻炼类型是？</label><br>
-        <input type="checkbox" name="type" value="有氧">有氧<br>
-        <input type="checkbox" name="type" value="力量训练">力量训练<br>
-        <input type="checkbox" name="type" value="瑜伽/伸展">瑜伽/伸展<br>
-        <input type="checkbox" name="type" value="其他">其他<br><br>
+      node.exit()
+          .transition()
+          .duration(750)
+          .style("opacity", 0)
+          .remove(); 
+    }
 
-        <label>你锻炼的主要目标是什么？</label><br>
-        <input type="checkbox" name="goal" value="减脂">减脂<br>
-        <input type="checkbox" name="goal" value="增肌">增肌<br>
-        <input type="checkbox" name="goal" value="保持健康">保持健康<br>
-        <input type="checkbox" name="goal" value="缓解压力">缓解压力<br>
-        <input type="checkbox" name="goal" value="其他">其他<br><br>
+    
+    function handleMouseOver(event, d) {
+      d3.select(this).select("circle")
+        .transition()
+        .duration(200)
+        .attr("r", 10);
+    }
 
-        <h4>主题 2：健身App使用</h4>
-        <label>你是否使用过健身App？</label><br>
-        <input type="radio" name="app_usage" value="是">是<br>
-        <input type="radio" name="app_usage" value="否">否<br><br>
+   
+    function handleMouseOut(event, d) {
+      d3.select(this).select("circle")
+        .transition()
+        .duration(200)
+        .attr("r", 5);
+    }
 
-        <label>你目前使用的健身App是？</label><br>
-        <input type="radio" name="app_name" value="Keep">Keep<br>
-        <input type="radio" name="app_name" value="Fitbit">Fitbit<br>
-        <input type="radio" name="app_name" value="Nike Training Club">Nike Training Club<br>
-        <input type="radio" name="app_name" value="Adidas Training">Adidas Training<br>
-        <input type="radio" name="app_name" value="其他">其他<br><br>
+    
+    function handleClick(d) {
+      nodeStack.push(d.data); 
+      updateTree(d.data); 
+    }
 
-        <label>你使用健身App的主要目的是什么？</label><br>
-        <input type="checkbox" name="app_purpose" value="制定计划">制定计划<br>
-        <input type="checkbox" name="app_purpose" value="跟踪锻炼">跟踪锻炼<br>
-        <input type="checkbox" name="app_purpose" value="学习新动作">学习新动作<br>
-        <input type="checkbox" name="app_purpose" value="其他">其他<br><br>
-
-        <label>你认为健身App中最有用的功能是？</label><br>
-        <input type="checkbox" name="app_features" value="课程推荐">课程推荐<br>
-        <input type="checkbox" name="app_features" value="运动跟踪">运动跟踪<br>
-        <input type="checkbox" name="app_features" value="进度报告">进度报告<br>
-        <input type="checkbox" name="app_features" value="社交功能">社交功能<br>
-        <input type="checkbox" name="app_features" value="其他">其他<br><br>
-
-        <label>你是否曾因健身App的使用体验而改变锻炼计划？</label><br>
-        <input type="radio" name="app_change" value="是">是<br>
-        <input type="radio" name="app_change" value="否">否<br><br>
-
-        <h4>主题 3：用户反馈与期望</h4>
-        <label>你对目前使用的健身App满意吗？</label><br>
-        <input type="radio" name="app_satisfaction" value="非常满意">非常满意<br>
-        <input type="radio" name="app_satisfaction" value="满意">满意<br>
-        <input type="radio" name="app_satisfaction" value="一般">一般<br>
-        <input type="radio" name="app_satisfaction" value="不满意">不满意<br>
-        <input type="radio" name="app_satisfaction" value="非常不满意">非常不满意<br><br>
-
-        <label>你认为健身App的哪些方面最需要改进？</label><br>
-        <input type="checkbox" name="app_improvement" value="内容质量">内容质量<br>
-        <input type="checkbox" name="app_improvement" value="界面设计">界面设计<br>
-        <input type="checkbox" name="app_improvement" value="用户互动">用户互动<br>
-        <input type="checkbox" name="app_improvement" value="数据准确性">数据准确性<br>
-        <input type="checkbox" name="app_improvement" value="其他">其他<br><br>
-
-        <label>你是否愿意为健身App支付一定费用？</label><br>
-        <input type="radio" name="app_payment" value="愿意">愿意<br>
-        <input type="radio" name="app_payment" value="不愿意">不愿意<br>
-        <input type="radio" name="app_payment" value="视情况而定">视情况而定<br><br>
-
-        <label>如果有新功能推出，你是否愿意尝试？</label><br>
-        <input type="radio" name="app_new_features" value="非常愿意">非常愿意<br>
-        <input type="radio" name="app_new_features" value="愿意">愿意<br>
-        <input type="radio" name="app_new_features" value="不确定">不确定<br>
-        <input type="radio" name="app_new_features" value="不愿意">不愿意<br>
-        <input type="radio" name="app_new_features" value="非常不愿意">非常不愿意<br><br>
-
-        <label>你会推荐你正在使用的健身App给朋友吗？</label><br>
-        <input type="radio" name="app_recommendation" value="会">会<br>
-        <input type="radio" name="app_recommendation" value="不会">不会<br>
-        <input type="radio" name="app_recommendation" value="视情况而定">视情况而定<br><br>
-    </form>
+    
+    document.addEventListener("keydown", event => {
+      if (event.key === " ") { // 空格键回退
+        event.preventDefault();
+        if (nodeStack.length > 1) {
+          nodeStack.pop();
+          updateTree(nodeStack[nodeStack.length - 1]); 
+        }
+      }
+    });
+  </script>
 </body>
 </html>
